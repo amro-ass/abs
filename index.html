@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de Bord des Absences — ثانوية عمرو بن العاص التأهيلية</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F8FA;--card:rgba(255,255,255,.98);--text:#172033;--muted:#5b6472;--primary:#0F2747;--primary2:#C9A227;--gold:#C9A227;--gold-light:#E8D28A;--accent:#C9A227;--border:rgba(15,39,71,.14);--danger:#C0392B;--warning:#b8860b;--success:#198754;--shadow:0 10px 32px rgba(15,39,71,.08);--shadow2:0 8px 22px rgba(201,162,39,.22)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font-family:Inter,"Segoe UI",Tahoma,Arial,sans-serif;background:#F7F8FA;min-height:100vh}
+.brand,.school h1,.title h2,.modal-head h2,.summary-left h2{font-family:"Fraunces",Georgia,serif}
+button,input,select{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:270px;background:#fff;color:var(--text);padding:0 14px 24px;position:fixed;inset:0 auto 0 0;z-index:20;box-shadow:2px 0 24px rgba(15,39,71,.06);overflow:auto;border-right:1px solid var(--border)}.brand{font-weight:700;font-size:14.5px;line-height:1.5;padding:22px 8px 20px;display:flex;gap:11px;align-items:flex-start;border-bottom:1px solid var(--border);margin-bottom:12px}.brand:before{content:"🎓";flex:none;display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 8px 18px rgba(201,162,39,.35);font-size:17px;font-family:initial}.brand small{display:block;color:var(--muted);font-weight:500;font-family:Inter,sans-serif;font-size:10.5px;margin-top:6px;line-height:1.6}.nav button{width:100%;display:flex;align-items:center;border:1px solid transparent;background:transparent;color:#2c3548;padding:9px 10px;border-radius:11px;text-align:left;cursor:pointer;margin:4px 0;transition:.25s;font-weight:600;font-size:13.5px}.nav-ic{flex:none;width:29px;height:29px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;margin-right:10px;font-size:14px;background:#F5ECD1}.nav button:hover{background:#FAF7ED}.nav button.active{background:#F5ECD1;color:var(--text)}.nav button.active .nav-ic{background:#fff}.main{margin-left:270px;width:calc(100% - 270px);padding:25px;max-width:1900px}.topbar{position:sticky;top:15px;z-index:15;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:14px;padding:17px 20px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:18px}.school{display:flex;flex-direction:column}.school h1{font-size:19px;margin:0 0 5px;font-weight:700}.school p{margin:2px 0;color:var(--muted);font-size:11px}.actions{display:flex;gap:9px;align-items:center}.btn{border:1px solid var(--border);background:#fff;color:var(--text);border-radius:9px;padding:9px 13px;cursor:pointer;transition:.22s;box-shadow:0 1px 2px rgba(15,39,71,.04);font-weight:500}.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow2);border-color:rgba(201,162,39,.35)}.btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));border-color:transparent;color:#fff;box-shadow:0 8px 18px rgba(201,162,39,.35)}.lang{font-weight:700;color:var(--text)}.summary-bar{margin-top:20px;border-radius:16px;padding:20px 22px;background:linear-gradient(120deg,#163a63,#0F2747 60%,#0a1c33);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;box-shadow:0 16px 34px rgba(15,39,71,.3)}.summary-left{display:flex;gap:14px;align-items:center}.summary-icon{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}.summary-left h2{margin:0;font-size:20px;font-weight:600}.summary-sync{margin:4px 0 0;font-size:11.5px;color:rgba(255,255,255,.75)}.summary-stats{display:flex;gap:26px;flex-wrap:wrap}.summary-stat{text-align:center}.summary-stat b{display:block;font-size:22px;font-weight:800}.summary-stat span{font-size:10px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.4px}.filters,.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}.filter-grid{display:grid;grid-template-columns:repeat(7,minmax(125px,1fr));gap:11px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:0 0 6px}.field input,.field select{width:100%;padding:10px 11px;border:1px solid #e1e5ea;border-radius:9px;background:#F1F3F6;outline:none;transition:.2s}.field input:focus,.field select:focus,.search:focus{background:#fff;border-color:var(--primary);box-shadow:0 0 0 3px rgba(201,162,39,.18)}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;margin-bottom:20px}.kpi{--c:#0F2747;--cbg:#DCE6F0;min-height:138px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:.25s}.kpi:after{content:"";position:absolute;width:90px;height:90px;right:-30px;top:-35px;border-radius:50%;background:var(--cbg);opacity:.6}.kpi:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(15,39,71,.14)}.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}.kpi .icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--cbg);font-size:20px}.kpi .live{font-size:9px;font-weight:800;color:var(--success);background:#DCF1E6;padding:4px 9px;border-radius:999px;letter-spacing:.3px}.kpi .label{font-size:11px;color:var(--muted);margin-top:14px;font-weight:700;position:relative;z-index:1}.kpi .value{font-size:24px;font-weight:800;margin-top:3px;letter-spacing:-.4px;color:var(--c);position:relative;z-index:1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kpi .sub{font-size:10px;color:var(--muted);margin-top:3px;position:relative;z-index:1}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.panel h3{margin:0 0 15px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:7px;color:var(--text)}.panel h3:after{content:"";height:2px;flex:1;background:linear-gradient(90deg,rgba(201,162,39,.35),transparent);margin-left:8px}.chartbox{height:310px;position:relative}.class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:13px}.class-card{border:1px solid var(--border);border-radius:14px;padding:15px;cursor:pointer;transition:.25s;background:#fff;position:relative;overflow:hidden}.class-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primary)}.class-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(15,39,71,.14);border-color:rgba(201,162,39,.5)}.class-card h4{margin:0 0 11px;font-size:15px;color:var(--text);font-weight:700}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#F1F3F6;padding:10px;border-radius:9px;border:1px solid var(--border)}.stat b{display:block;font-size:15px;color:var(--text)}.stat span{font-size:10px;color:var(--muted)}.table-wrap{overflow:auto;border-radius:9px}.table{width:100%;border-collapse:separate;border-spacing:0;min-width:760px}.table th,.table td{padding:12px 11px;border-bottom:1px solid #eef0f3;text-align:left;font-size:12px}.table th{background:#F1F3F6;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;z-index:1}.table tbody tr{transition:.18s}.table tbody tr:hover{background:#FAFAFB}.table td:first-child{font-weight:600;color:var(--text)}.badge{display:inline-block;border-radius:7px;padding:5px 9px;font-size:10px;font-weight:800}.green{background:#DCF1E6;color:#146c43}.orange{background:#F0E6C8;color:#8a6d1a}.red{background:#FBE0E0;color:#C0392B}.analysis{font-size:12px;min-height:75px}.analysis strong{display:block;font-size:15px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;color:var(--text)}.search{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:9px;margin-bottom:12px;background:#F1F3F6;outline:none}.modal{position:fixed;inset:0;background:rgba(15,32,51,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal.open{display:flex}.modal-card{background:#fff;border:1px solid var(--border);border-radius:18px;width:min(1080px,100%);max-height:92vh;overflow:auto;padding:22px;box-shadow:0 30px 80px rgba(15,32,51,.28)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.modal-head h2{color:var(--text);font-weight:600}.close{border:0;background:#F5ECD1;border-radius:9px;padding:8px 11px;cursor:pointer}.detail-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:15px 0}.detail-kpi{padding:13px;border:1px solid var(--border);border-radius:10px;background:#F1F3F6}.detail-kpi span{font-size:10px;color:var(--muted)}.detail-kpi b{display:block;font-size:19px;margin-top:2px;color:var(--text)}.toast{position:fixed;bottom:22px;right:22px;background:var(--primary);color:#fff;padding:12px 16px;border-radius:10px;display:none;z-index:100;box-shadow:0 12px 30px rgba(15,39,71,.28)}.toast.show{display:block;animation:toastIn .25s ease}.mobile-menu{display:none}@keyframes toastIn{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}.kpi,.panel,.class-card{animation:slideIn .45s ease both}
+[dir="rtl"] .sidebar{inset:0 0 0 auto}.rtl .main{margin-left:0;margin-right:270px}.rtl .nav button{text-align:right}.rtl .nav-ic{margin-right:0;margin-left:10px}.rtl .table th,.rtl .table td{text-align:right}.rtl .class-card:before{left:auto;right:0}.rtl .panel h3:after{margin-left:0;margin-right:8px;background:linear-gradient(270deg,rgba(201,162,39,.35),transparent)}.rtl .kpi:after{right:auto;left:-30px}.rtl .brand{flex-direction:row-reverse}.rtl .summary-left{flex-direction:row-reverse}.rtl .summary-bar{flex-direction:row-reverse}
+@media(max-width:1250px){.filter-grid{grid-template-columns:repeat(4,1fr)}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1050px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}.filter-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.sidebar{display:none}.sidebar.open{display:block;width:270px}.main,.rtl .main{margin:0;width:100%;padding:12px}.mobile-menu{display:block}.topbar{position:relative;top:0;align-items:flex-start}.grid2,.grid3{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:1fr 1fr}.detail-kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr 1fr;gap:9px}.kpi{min-height:125px;padding:13px}.kpi .value{font-size:21px}.filter-grid{grid-template-columns:1fr}.summary-left h2{font-size:17px}.summary-bar{padding:16px}.summary-stats{gap:16px}.school h1{font-size:15px}.topbar{padding:13px}.actions{flex-wrap:wrap}.modal{padding:8px}.modal-card{padding:14px}.chartbox{height:275px}}
+
+/* Smooth selection + auto-hide navigation */
+.nav button{position:relative;overflow:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),background .28s ease,color .28s ease,box-shadow .28s ease,opacity .28s ease}
+.nav button::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.10),transparent);transform:translateX(-105%);transition:transform .45s ease;pointer-events:none}
+.nav button:hover::after,.nav button.active::after{transform:translateX(0)}
+.kpi,.panel,.class-card,.stat,.detail-kpi,.btn,.field input,.field select{will-change:transform,opacity}
+.kpi,.class-card,.panel{transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s ease,opacity .28s ease}
+.kpi:active,.class-card:active,.btn:active{transform:scale(.98)}
+.sidebar{transition:transform .34s cubic-bezier(.2,.8,.2,1),opacity .25s ease}
+.sidebar.hiding{transform:translateX(-105%);opacity:0;pointer-events:none}
+.rtl .sidebar.hiding{transform:translateX(105%)}
+@media(min-width:801px){.sidebar.hiding{transform:translateX(-105%)}.rtl .sidebar.hiding{transform:translateX(105%)}.main.sidebar-collapsed,.rtl .main.sidebar-collapsed{margin-left:0;margin-right:0;width:100%;transition:margin .34s ease,width .34s ease}}
+@media(max-width:800px){.sidebar.open{animation:sidebarIn .34s cubic-bezier(.2,.8,.2,1)}.sidebar.hiding{display:block}.main{transition:opacity .2s ease}}
+@keyframes sidebarIn{from{transform:translateX(-105%);opacity:0}to{transform:none;opacity:1}}
+.rtl .sidebar{animation-direction:reverse}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><span>الأكاديمية الجهوية للتربية والتكوين لجهة سوس ماسة<small>المديرية الإقليمية لأكادير إداوتنان<br><b style="color:var(--text)">الثانوية التأهيلية عمرو بن العاص</b></small></span></div>
+<nav class="nav">
+<button class="active" onclick="selectNav(this,'top')"><span class="nav-ic" style="background:#F5ECD1;color:#C9A227">📊</span> <span data-i18n="dashboard">Tableau de bord</span></button>
+<button onclick="selectNav(this,'students')"><span class="nav-ic" style="background:#DCE6F0;color:#0F2747">👨‍🎓</span> <span data-i18n="students">Élèves</span></button>
+<button onclick="selectNav(this,'classes')"><span class="nav-ic" style="background:#FBE0E0;color:#C0392B">🏫</span> <span data-i18n="classes">Classes</span></button>
+<button onclick="selectNav(this,'charts')"><span class="nav-ic" style="background:#F0E6C8;color:#8a6d1a">📈</span> <span data-i18n="analysisMenu">Analyses</span></button>
+</nav>
+</aside>
+<main class="main">
+<header class="topbar">
+<div class="school"><h1>الأكاديمية الجهوية للتربية والتكوين لجهة سوس ماسة</h1><p>المديرية الإقليمية لأكادير إداوتنان</p><p><b style="color:var(--text)">الثانوية التأهيلية عمرو بن العاص</b></p></div>
+<div class="actions"><button class="btn mobile-menu" onclick="toggleSidebar()">☰</button><button class="btn lang" onclick="changeLanguage()">FR / AR</button><button class="btn primary" onclick="loadData()">↻ <span data-i18n="refresh">Actualiser</span></button></div>
+</header>
+<section class="summary-bar" id="top">
+<div class="summary-left">
+<div class="summary-icon">📊</div>
+<div><h2 data-i18n="title">Tableau de Bord des Absences</h2><p class="summary-sync" id="lastUpdate"></p></div>
+</div>
+<div class="summary-stats" id="summaryStats"></div>
+</section>
+
+<section class="filters">
+<div class="filter-grid">
+<div class="field"><label data-i18n="start">Date début</label><input type="date" id="startDate"></div>
+<div class="field"><label data-i18n="end">Date fin</label><input type="date" id="endDate"></div>
+<div class="field"><label data-i18n="class">Classe</label><select id="classFilter"><option value="">Toutes</option></select></div>
+<div class="field"><label data-i18n="student">Élève</label><select id="studentFilter"><option value="">Tous</option></select></div>
+<div class="field"><label data-i18n="prof">Professeur</label><select id="profFilter"><option value="">Tous</option></select></div>
+<div class="field"><label data-i18n="subject">Matière</label><select id="subjectFilter"><option value="">Toutes</option></select></div>
+</div>
+<div class="export-actions" style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center">
+<button class="btn" onclick="resetFilters()" data-i18n="reset">↺ Réinitialiser</button>
+<button class="btn" onclick="loadData()" data-i18n="refreshData">🔄 تحديث البيانات</button>
+<button class="btn primary" onclick="downloadCurrentClassExcel()" data-i18n="downloadCurrent">📥 تنزيل Excel — القسم الحالي</button>
+<button class="btn primary" onclick="downloadAllClassesExcel()" data-i18n="downloadAll">📥 تنزيل جميع الأقسام</button>
+</div>
+</section>
+
+<section class="kpis" id="kpis"></section>
+
+<section class="grid2">
+<div class="panel"><h3>📊 <span data-i18n="classChart">Absences par classe</span></h3><div class="chartbox"><canvas id="classChart"></canvas></div></div>
+<div class="panel"><h3>📚 <span data-i18n="subjectChart">Absences par matière</span></h3><div class="chartbox"><canvas id="subjectChart"></canvas></div></div>
+<div class="panel"><h3>👨‍🏫 <span data-i18n="profChart">Absences par professeur</span></h3><div class="chartbox"><canvas id="profChart"></canvas></div></div>
+<div class="panel"><h3>📅 <span data-i18n="evolution">Évolution des absences</span></h3><div class="chartbox"><canvas id="evolutionChart"></canvas></div></div>
+<div class="panel"><h3>🏆 <span data-i18n="topChart">Top 10 élèves absents</span></h3><div class="chartbox"><canvas id="topChart"></canvas></div></div>
+<div class="panel"><h3>🗓️ <span data-i18n="dayChart">Absences par jour</span></h3><div class="chartbox"><canvas id="dayChart"></canvas></div></div>
+<div class="panel"><h3>⏰ <span data-i18n="hourChart">Absences par heure</span></h3><div class="chartbox"><canvas id="hourChart"></canvas></div></div>
+</section>
+
+<section class="panel"><h3>🏫 <span data-i18n="classFollow">Suivi des absences par classe</span></h3><div class="class-grid" id="classes"></div></section>
+
+<section class="panel"><h3>🔎 <span data-i18n="studentList">Liste des élèves</span></h3><input class="search" id="search" placeholder="Rechercher un élève..." oninput="renderStudents()"><div class="table-wrap"><table class="table"><thead><tr><th>Élève</th><th>Classe</th><th>Heures</th><th>Absences</th><th>Dernière absence</th><th>Niveau</th><th>Détails</th></tr></thead><tbody id="studentsTable"></tbody></table></div></section>
+
+<section class="panel"><h3>📌 <span data-i18n="global">Analyse globale</span></h3><div class="grid3" id="analysis"></div></section>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modal-card" id="modalContent"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL="https://sheetdb.io/api/v1/dndka1zuujutp";
+const SHEET2_URL="https://sheetdb.io/api/v1/dndka1zuujutp?sheet=Sheet2";
+const SCHOOL_YEAR="2026-2027";
+const EXPORT_MONTHS=["شتنبر","أكتوبر","نونبر","دجنبر","يناير","فبراير","مارس","أبريل","ماي","يونيو"];
+let rawData=[], processedData=[], filteredData=[], refData=[], currentLanguage="fr", charts={};
+
+const T={
+fr:{dashboard:"Tableau de bord",students:"Élèves",classes:"Classes",analysisMenu:"Analyses",refresh:"Actualiser",title:"Tableau de Bord des Absences",subtitle:"Suivi, analyse et pilotage des absences des élèves",start:"Date début",end:"Date fin",class:"Classe",student:"Élève",prof:"Professeur",subject:"Matière",reset:"Réinitialiser",classChart:"Absences par classe",subjectChart:"Absences par matière",profChart:"Absences par professeur",evolution:"Évolution des absences",topChart:"Top 10 élèves absents",dayChart:"Absences par jour",hourChart:"Absences par heure",statusChart:"Répartition des statuts",classFollow:"Suivi des absences par classe",studentList:"Liste des élèves",global:"Analyse globale"},
+ar:{dashboard:"لوحة القيادة",students:"التلاميذ",classes:"الأقسام",analysisMenu:"التحليلات",refresh:"تحديث",title:"لوحة قيادة وتتبع غياب التلاميذ",subtitle:"تتبع وتحليل وتدبير غياب التلاميذ",start:"تاريخ البداية",end:"تاريخ النهاية",class:"القسم",student:"التلميذ",prof:"الأستاذ",subject:"المادة",reset:"إعادة ضبط",classChart:"الغياب حسب القسم",subjectChart:"الغياب حسب المادة",profChart:"الغياب حسب الأستاذ",evolution:"تطور الغياب",topChart:"أكثر 10 تلاميذ غيابًا",dayChart:"الغياب حسب أيام الأسبوع",hourChart:"الغياب حسب الحصة",statusChart:"توزيع الحالات",classFollow:"تتبع الغياب حسب القسم",studentList:"لائحة التلاميذ",global:"التحليل العام",refreshData:"تحديث البيانات",downloadCurrent:"📥 تنزيل Excel — القسم الحالي",downloadAll:"📥 تنزيل جميع الأقسام"}
+};
+
+const $=id=>document.getElementById(id);
+function clean(v){return String(v??"").trim().replace(/\s+/g," ")}
+function status(v){let s=clean(v).toLowerCase();return s==="absent"||s==="absente"||s==="غائب"?"Absent":s==="présent"||s==="present"||s==="حاضر"?"Présent":clean(v)}
+function parseDate(v){let s=clean(v);if(!s)return null;let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);let d=new Date(s);return isNaN(d)?null:d}
+function dateKey(v){let d=parseDate(v);return d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:clean(v)}
+function normalizeData(rows){return rows.map((r,i)=>({i,date:clean(r.Date),dateKey:dateKey(r.Date),heure:clean(r.Heure),matiere:clean(r.Matière||r.Matiere||r["المادة"]),prof:clean(r.Professeur||r["الأستاذ"]||r["الأستاذ(ة)"]),classe:clean(r.Classe||r["القسم"]),eleve:clean(r.Élève||r.Eleve||r["الاسم"]),statut:status(r.Statut)})).filter(r=>r.eleve&&r.classe)}
+function normalizeRefData(rows){return rows.map(r=>({classe:clean(r.Classe||r["القسم"]),eleve:clean(r["Élève"]||r.Eleve||r["الاسم"]),prof:clean(r.Professeur||r["الأستاذ"]||r["الأستاذ(ة)"]),matiere:clean(r["Matière"]||r.Matiere||r["المادة"])})).filter(r=>r.classe||r.eleve||r.prof||r.matiere)}
+function removeDuplicates(rows){let m=new Map();rows.forEach(r=>m.set([r.dateKey,r.heure,r.classe.toLowerCase(),r.eleve.toLowerCase()].join("|"),r));return [...m.values()]}
+async function loadData(){
+ showToast("Chargement...");
+ try{
+  let res=await fetch(API_URL,{cache:"no-store"});if(!res.ok)throw Error("API");
+  let data=await res.json();rawData=data;processedData=removeDuplicates(normalizeData(data));
+  try{
+   let res2=await fetch(SHEET2_URL,{cache:"no-store"});
+   if(res2.ok){let data2=await res2.json();refData=normalizeRefData(Array.isArray(data2)?data2:[])}
+   else refData=[]
+  }catch(e2){refData=[]}
+  populateFilters();applyFilters();
+  $("lastUpdate").textContent=(currentLanguage==="fr"?"Dernière mise à jour : ":"آخر تحديث: ")+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  showToast(currentLanguage==="fr"?"Données actualisées":"تم تحديث البيانات")
+ }
+ catch(e){showToast(currentLanguage==="fr"?"Erreur de chargement — vérifiez l'API":"تعذر تحميل البيانات — تحقق من الرابط")}
+}
+function unique(a,k){return [...new Set(a.map(x=>x[k]).filter(Boolean))].sort((x,y)=>x.localeCompare(y,"fr"))}
+function fillSelect(id,vals,all){let s=$(id),old=s.value;s.innerHTML=`<option value="">${all}</option>`;vals.forEach(v=>{let o=document.createElement("option");o.value=v;o.textContent=v;s.appendChild(o)});if(vals.includes(old))s.value=old}
+function cascadeData(level){
+ // مصدر خيارات التصفية هو الجدول المرجعي refData (Sheet2)، ويُستخدم processedData كحل احتياطي إذا تعذّر جلب Sheet2
+ let source=refData.length?refData:processedData;
+ let s=$("startDate").value,e=$("endDate").value,c=$("classFilter").value,st=$("studentFilter").value,p=$("profFilter").value;
+ let useDates=source===processedData;
+ return source.filter(r=>{
+  if(useDates){if(s&&r.dateKey<s)return false;if(e&&r.dateKey>e)return false}
+  if(level>=1&&c&&r.classe!==c)return false;
+  if(level>=2&&st&&r.eleve!==st)return false;
+  if(level>=3&&p&&r.prof!==p)return false;
+  return true
+ })
+}
+function populateFilters(){
+ // كل قائمة (Select) تُبنى فقط من القيم الموجودة ضمن نتائج القوائم التي تسبقها في التسلسل
+ fillSelect("classFilter",unique(cascadeData(0),"classe"),"Toutes");
+ fillSelect("studentFilter",unique(cascadeData(1),"eleve"),"Tous");
+ fillSelect("profFilter",unique(cascadeData(2),"prof"),"Tous");
+ fillSelect("subjectFilter",unique(cascadeData(3),"matiere"),"Toutes")
+}
+function onCascadeChange(clearFrom){
+ // عند تغيير مستوى في السلسلة، يتم إفراغ المستويات الأدنى منه حتى لا يبقى اختيار متعارض مع القسم/التلميذ/الأستاذ الجديد
+ const order=["studentFilter","profFilter","subjectFilter"];
+ order.slice(clearFrom).forEach(id=>$(id).value="");
+ populateFilters();
+ applyFilters()
+}
+$("startDate").addEventListener("change",()=>onCascadeChange(0));
+$("endDate").addEventListener("change",()=>onCascadeChange(0));
+$("classFilter").addEventListener("change",()=>onCascadeChange(0));
+$("studentFilter").addEventListener("change",()=>onCascadeChange(1));
+$("profFilter").addEventListener("change",()=>onCascadeChange(2));
+$("subjectFilter").addEventListener("change",()=>onCascadeChange(3));
+function applyFilters(){let s=$("startDate").value,e=$("endDate").value,c=$("classFilter").value,st=$("studentFilter").value,p=$("profFilter").value,m=$("subjectFilter").value,q=clean($("search").value).toLowerCase();filteredData=processedData.filter(r=>(!s||r.dateKey>=s)&&(!e||r.dateKey<=e)&&(!c||r.classe===c)&&(!st||r.eleve===st)&&(!p||r.prof===p)&&(!m||r.matiere===m)&&(!q||r.eleve.toLowerCase().includes(q)||r.classe.toLowerCase().includes(q)));renderAll()}
+function absentRows(){return filteredData.filter(r=>r.statut==="Absent")}
+function group(rows,key){let o={};rows.forEach(r=>{o[r[key]]=(o[r[key]]||0)+1});return o}
+function studentsCount(rows){return new Set(rows.map(r=>r.eleve.toLowerCase())).size}
+function calculateKPIs(){let a=absentRows(),students=studentsCount(filteredData),classes=new Set(filteredData.map(r=>r.classe)).size,profs=new Set(filteredData.map(r=>r.prof).filter(Boolean)).size,subs=new Set(filteredData.map(r=>r.matiere).filter(Boolean)).size,days=new Set(a.map(r=>r.dateKey)).size,byS=group(a,"eleve"),byC=group(a,"classe"),byM=group(a,"matiere");let max=(o)=>Object.entries(o).sort((x,y)=>y[1]-x[1])[0]?.[0]||"—";return[{i:"👨‍🎓",l:"Total Élèves",v:students},{i:"🚫",l:"Total Absences",v:a.length},{i:"⏱️",l:"Heures d'absence",v:a.length},{i:"📅",l:"Absences aujourd'hui",v:a.filter(r=>r.dateKey===dateKey(new Date())).length},{i:"🏫",l:"Classes",v:classes},{i:"👨‍🏫",l:"Professeurs",v:profs},{i:"📚",l:"Matières",v:subs},{i:"🔴",l:"Élèves absents",v:new Set(a.map(r=>r.eleve.toLowerCase())).size},{i:"📈",l:"Taux d'absence",v:(filteredData.length?(a.length/filteredData.length*100).toFixed(1):0)+"%"},{i:"⚖️",l:"Moyenne h / élève",v:(students?(a.length/students).toFixed(2):0)},{i:"🗓️",l:"Jours avec absences",v:days},{i:"🏆",l:"Élève le plus absent",v:max(byS)},{i:"🏫",l:"Classe la plus absente",v:max(byC)},{i:"📚",l:"Matière la plus absente",v:max(byM)}]}
+function renderKPIs(){const palette=[["#C9A227","#F5ECD1"],["#0F2747","#DCE6F0"],["#C0392B","#FBE0E0"],["#198754","#DCF1E6"],["#8a6d1a","#F0E6C8"],["#1c4a7a","#DCE6F0"],["#0d6e6e","#D9F0EF"],["#8e2a20","#F5DCD8"],["#b8860b","#F7EBC8"],["#146c43","#D3EEDD"],["#2c4a68","#E3EAF0"],["#6b5510","#EDE6C8"],["#14304f","#DCE3EE"],["#b5482f","#F8E2DA"]];const items=calculateKPIs();$("kpis").innerHTML=items.map((x,idx)=>{const[c,bg]=palette[idx%palette.length];return`<div class="kpi" style="--c:${c};--cbg:${bg}"><div class="kpi-top"><div class="icon">${x.i}</div><span class="live">● Live</span></div><div class="label">${x.l}</div><div class="value">${x.v}</div></div>`}).join("");$("summaryStats").innerHTML=items.slice(0,4).map(x=>`<div class="summary-stat"><b>${x.v}</b><span>${x.l}</span></div>`).join("")}
+function level(c){let s=c.toUpperCase();if(s.includes("2BAC")||s.includes("2 BAC"))return"2BAC";if(s.includes("1BAC")||s.includes("1 BAC"))return"1BAC";if(s.includes("TC")||s.includes("TRONC"))return"Tronc Commun";return""}
+function studentStats(rows){let a=rows.filter(r=>r.statut==="Absent"),last=a.map(r=>r.dateKey).sort().pop()||"—";return{abs:a.length,h:a.length,last}}
+function renderStudents(){let q=clean($("search").value).toLowerCase(),map={};filteredData.forEach(r=>{if(q&&!r.eleve.toLowerCase().includes(q)&&!r.classe.toLowerCase().includes(q))return;let k=r.eleve.toLowerCase()+"|"+r.classe;if(!map[k])map[k]={name:r.eleve,classe:r.classe,rows:[]};map[k].rows.push(r)});let arr=Object.values(map).map(x=>({...x,...studentStats(x.rows)})).sort((a,b)=>b.h-a.h);$("studentsTable").innerHTML=arr.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.classe)}</td><td><span class="badge ${x.h>5?"red":x.h>=3?"orange":"green"}">${x.h}</span></td><td>${x.abs}</td><td>${x.last}</td><td>${level(x.classe)}</td><td><button class="btn" onclick='showStudentDetails(${JSON.stringify(x.name)},${JSON.stringify(x.classe)})'>👁</button></td></tr>`).join("")||`<tr><td colspan="7" style="text-align:center;padding:25px;color:#64748b">Aucune donnée disponible</td></tr>`}
+function renderClasses(){let map={};filteredData.forEach(r=>{if(!map[r.classe])map[r.classe]={rows:[],students:new Set};map[r.classe].rows.push(r);map[r.classe].students.add(r.eleve)});$("classes").innerHTML=Object.entries(map).sort().map(([c,x])=>{let a=x.rows.filter(r=>r.statut==="Absent").length,avg=x.students.size?(a/x.students.size).toFixed(2):0;return`<div class="class-card" onclick='showClassDetails(${JSON.stringify(c)})'><h4>${esc(c)}</h4><div class="stats"><div class="stat"><b>${x.students.size}</b><span>Élèves</span></div><div class="stat"><b>${a}</b><span>Absences</span></div><div class="stat"><b>${a}</b><span>Heures</span></div><div class="stat"><b>${avg}</b><span>Moy./élève</span></div></div></div>`}).join("")||"<p>Aucune donnée</p>"}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const CHART_PALETTE=["#0F2747","#C9A227","#198754","#C0392B","#1c4a7a","#8a6d1a","#0d6e6e","#8e2a20","#b8860b","#146c43","#2c4a68","#6b5510","#14304f","#b5482f"];
+function chart(id,type,labels,data,label){if(charts[id])charts[id].destroy();const ctx=$(id).getContext("2d");const isLine=type==="line",isMulti=type==="doughnut"||type==="bar";let bg;if(isLine){bg="rgba(192,57,43,.08)"}else if(isMulti){bg=data.map((_,i)=>CHART_PALETTE[i%CHART_PALETTE.length])}else{const grad=ctx.createLinearGradient(0,0,0,310);grad.addColorStop(0,"rgba(15,39,71,.88)");grad.addColorStop(1,"rgba(201,162,39,.55)");bg=grad}const ds={label,data,borderWidth:isLine?3:(type==="doughnut"?2:1),borderRadius:type==="bar"?6:0,tension:.35,backgroundColor:bg,borderColor:isLine?"#C0392B":(type==="doughnut"?"#fff":undefined),fill:isLine,pointRadius:isLine?3:0,pointHoverRadius:6,pointBackgroundColor:"#C0392B"};charts[id]=new Chart(ctx,{type,data:{labels,datasets:[ds]},options:{responsive:true,maintainAspectRatio:false,animation:{duration:750,easing:"easeOutQuart"},interaction:{intersect:false,mode:"index"},plugins:{legend:{display:type==="doughnut",position:"bottom",labels:{usePointStyle:true,padding:16}},tooltip:{backgroundColor:"rgba(15,32,51,.94)",padding:11,cornerRadius:8}},scales:type==="doughnut"?{}:{x:{grid:{display:false},ticks:{color:"#5b6472",font:{size:10}}},y:{beginAtZero:true,grid:{color:"rgba(15,39,71,.1)"},ticks:{color:"#5b6472",font:{size:10},precision:0}}}}})}
+function renderCharts(){let a=absentRows(),gc=k=>group(a,k),c=gc("classe"),m=gc("matiere"),p=gc("prof"),h=gc("heure"),days={Lundi:0,Mardi:0,Mercredi:0,Jeudi:0,Vendredi:0,Samedi:0,Dimanche:0},dates={};a.forEach(r=>{let d=parseDate(r.date);if(d){let day=d.toLocaleDateString("fr-FR",{weekday:"long"});day=day.charAt(0).toUpperCase()+day.slice(1);days[day]=(days[day]||0)+1}dates[r.dateKey]=(dates[r.dateKey]||0)+1});let top=gc("eleve");chart("classChart","bar",Object.keys(c),Object.values(c),"Absences");chart("subjectChart","doughnut",Object.keys(m),Object.values(m),"Absences");chart("profChart","bar",Object.keys(p),Object.values(p),"Absences");chart("evolutionChart","line",Object.keys(dates).sort(),Object.keys(dates).sort().map(k=>dates[k]),"Absences");let top10=Object.entries(top).sort((x,y)=>y[1]-x[1]).slice(0,10);chart("topChart","bar",top10.map(x=>x[0]),top10.map(x=>x[1]),"Absences");chart("dayChart","bar",Object.keys(days),Object.values(days),"Absences");chart("hourChart","bar",Object.keys(h),Object.values(h),"Absences")}
+function renderAnalysis(){let a=absentRows(),max=o=>Object.entries(group(a,o)).sort((x,y)=>y[1]-x[1])[0]||["—",0],items=[["🏫","Classe la plus absente",max("classe")],["📚","Matière la plus absente",max("matiere")],["👨‍🏫","Professeur associé au plus grand nombre d'absences",max("prof")],["👨‍🎓","Élève le plus absent",max("eleve")],["📅","Jour avec le plus d'absences",["—",""]],["⏰","Heure avec le plus d'absences",max("heure")]];$("analysis").innerHTML=items.map(x=>`<div class="analysis stat"><span>${x[0]} ${x[1]}</span><strong>${esc(x[2][0])} ${x[2][1]?`(${x[2][1]})`:""}</strong></div>`).join("")}
+function renderAll(){renderKPIs();renderClasses();renderStudents();renderCharts();renderAnalysis()}
+
+function firstValue(row,keys){for(const key of keys){if(row&&row[key]!==undefined&&row[key]!==null&&String(row[key]).trim()!=="")return row[key]}return ""}
+function refName(row){return clean(firstValue(row,["الاسم","اسم التلميذ","Élève","Eleve","الطالب","name"]))}
+function refClass(row){return clean(firstValue(row,["القسم","Classe","Section","section","classe"]))}
+function exportMonthIndex(value){let d=parseDate(value);if(!d)return -1;let y=d.getFullYear(),m=d.getMonth()+1;if(y===2026&&m>=9)return m-9;if(y===2027&&m<=6)return m+3;return -1}
+function exportHours(row){let raw=firstValue(row,["عدد الساعات","الساعات","Heures","hours","Hours"]);let n=Number(String(raw).replace(",","."));if(Number.isFinite(n)&&n>0)return n;let rawTime=clean(row.heure||firstValue(row,["Heure","الساعة"]));let match=rawTime.match(/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/);if(match){let start=Number(match[1])+Number(match[2])/60,end=Number(match[3])+Number(match[4])/60;return Math.max(0,end-start)}return 1}
+function exportIsAbsent(row){let s=clean(row.statut||firstValue(row,["Statut","Status","الحالة"])).toLowerCase();return !s||s.includes("abs")||s.includes("غائب")||s.includes("غياب")}
+function rosterRows(){let source=refData.length?refData:rawData.map(r=>({classe:r.classe,eleve:r.eleve}));let map=new Map();source.forEach(r=>{let name=refName(r)||clean(r.eleve),section=refClass(r)||clean(r.classe);if(!name||!section)return;let key=section.toLowerCase()+"|"+name.toLowerCase();if(!map.has(key))map.set(key,{name,section})});return [...map.values()]}
+function exportRowsForSection(section){let roster=rosterRows().filter(x=>!section||x.section===section),map=new Map();roster.forEach(x=>{let item={"#":0,"الاسم":x.name,"القسم":x.section};EXPORT_MONTHS.forEach(m=>item[m]=0);item["المجموع"]=0;map.set(x.section.toLowerCase()+"|"+x.name.toLowerCase(),item)});processedData.forEach(r=>{if(section&&r.classe!==section||!exportIsAbsent(r))return;let month=exportMonthIndex(r.date);if(month<0)return;let key=r.classe.toLowerCase()+"|"+r.eleve.toLowerCase();if(!map.has(key)){let item={"#":0,"الاسم":r.eleve,"القسم":r.classe};EXPORT_MONTHS.forEach(m=>item[m]=0);item["المجموع"]=0;map.set(key,item)}let item=map.get(key),hours=exportHours(r);item[EXPORT_MONTHS[month]]=Number((item[EXPORT_MONTHS[month]]+hours).toFixed(2));item["المجموع"]=Number((item["المجموع"]+hours).toFixed(2))});let rows=[...map.values()].sort((a,b)=>a["الاسم"].localeCompare(b["الاسم"],"ar"));rows.forEach((item,i)=>item["#"]=i+1);return rows}
+function exportSections(){return [...new Set(rosterRows().map(x=>x.section).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr"))}
+function safeSheetName(name){return String(name||"قسم").replace(/[\\/?*\[\]:]/g," ").trim().slice(0,31)||"قسم"}
+function makeExportWorkbook(sections){if(typeof XLSX==="undefined"){showToast("مكتبة Excel غير متاحة");return null}let wb=XLSX.utils.book_new();sections.forEach(section=>{let rows=exportRowsForSection(section);let ws=XLSX.utils.json_to_sheet(rows,{header:["#","الاسم","القسم",...EXPORT_MONTHS,"المجموع"]});ws["!cols"]=[{wch:5},{wch:28},{wch:18},...EXPORT_MONTHS.map(()=>({wch:12})),{wch:12}];XLSX.utils.book_append_sheet(wb,ws,safeSheetName(section))});return wb}
+function downloadCurrentClassExcel(){let section=$("classFilter").value;if(!section){showToast(currentLanguage==="fr"?"Choisissez une classe d'abord":"اختر القسم الحالي أولاً");return}let wb=makeExportWorkbook([section]);if(wb){XLSX.writeFile(wb,`غياب_${safeSheetName(section)}_${SCHOOL_YEAR}.xlsx`);showToast("تم تنزيل ملف القسم بجميع التلاميذ")}}
+function downloadAllClassesExcel(){let sections=exportSections();if(!sections.length){showToast("لا توجد قائمة تلاميذ في Sheet2");return}let wb=makeExportWorkbook(sections);if(wb){XLSX.writeFile(wb,`غياب_التلاميذ_${SCHOOL_YEAR}.xlsx`);showToast("تم تنزيل جميع الأقسام بجميع التلاميذ")}}
+function showStudentDetails(name,classe){let rows=filteredData.filter(r=>r.eleve===name&&r.classe===classe),a=rows.filter(r=>r.statut==="Absent"),days=new Set(a.map(r=>r.dateKey)).size,subs=new Set(a.map(r=>r.matiere).filter(Boolean)).size,profs=new Set(a.map(r=>r.prof).filter(Boolean)).size;let dates=group(a,"dateKey");$("modalContent").innerHTML=`<div class="modal-head"><div><h2 style="margin:0">Détail des absences – ${esc(name)}</h2><p style="color:#64748b">${esc(classe)}</p></div><button class="close" onclick="closeModal()">✕</button></div><div class="detail-kpis"><div class="detail-kpi"><span>Heures</span><b>${a.length}</b></div><div class="detail-kpi"><span>Jours absents</span><b>${days}</b></div><div class="detail-kpi"><span>Matières</span><b>${subs}</b></div><div class="detail-kpi"><span>Professeurs</span><b>${profs}</b></div></div><div class="chartbox"><canvas id="studentChart"></canvas></div><div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Heure</th><th>Matière</th><th>Professeur</th><th>Classe</th><th>Statut</th></tr></thead><tbody>${rows.sort((x,y)=>x.dateKey.localeCompare(y.dateKey)).map(r=>`<tr><td>${r.date}</td><td>${esc(r.heure)}</td><td>${esc(r.matiere)}</td><td>${esc(r.prof)}</td><td>${esc(r.classe)}</td><td>${r.statut}</td></tr>`).join("")}</tbody></table></div>`;$("modal").classList.add("open");chart("studentChart","line",Object.keys(dates).sort(),Object.keys(dates).sort().map(k=>dates[k]),"Absences")}
+function showClassDetails(classe){let rows=filteredData.filter(r=>r.classe===classe),a=rows.filter(r=>r.statut==="Absent"),map={};rows.forEach(r=>{map[r.eleve]=(map[r.eleve]||0)+(r.statut==="Absent"?1:0)});let arr=Object.entries(map).sort((x,y)=>y[1]-x[1]);$("modalContent").innerHTML=`<div class="modal-head"><div><h2 style="margin:0">Classe ${esc(classe)}</h2><p style="color:#64748b">Détail des absences</p></div><button class="close" onclick="closeModal()">✕</button></div><div class="detail-kpis"><div class="detail-kpi"><span>Élèves</span><b>${new Set(rows.map(r=>r.eleve)).size}</b></div><div class="detail-kpi"><span>Absences</span><b>${a.length}</b></div><div class="detail-kpi"><span>Heures</span><b>${a.length}</b></div><div class="detail-kpi"><span>Moyenne / élève</span><b>${(a.length/(new Set(rows.map(r=>r.eleve)).size||1)).toFixed(2)}</b></div></div><div class="table-wrap"><table class="table"><thead><tr><th>Élève</th><th>Absences</th><th>Heures</th><th>Détails</th></tr></thead><tbody>${arr.map(x=>`<tr><td>${esc(x[0])}</td><td>${x[1]}</td><td>${x[1]}</td><td><button class="btn" onclick='showStudentDetails(${JSON.stringify(x[0])},${JSON.stringify(classe)})'>👁</button></td></tr>`).join("")}</tbody></table></div>`;$("modal").classList.add("open")}
+function closeModal(){$("modal").classList.remove("open")}
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+function resetFilters(){["startDate","endDate"].forEach(x=>$(x).value="");["classFilter","studentFilter","profFilter","subjectFilter"].forEach(x=>$(x).value="");$("search").value="";populateFilters();applyFilters()}
+function changeLanguage(){currentLanguage=currentLanguage==="fr"?"ar":"fr";document.documentElement.lang=currentLanguage;document.documentElement.dir=currentLanguage==="ar"?"rtl":"ltr";document.body.classList.toggle("rtl",currentLanguage==="ar");document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=T[currentLanguage][e.dataset.i18n]||e.textContent);$("search").placeholder=currentLanguage==="fr"?"Rechercher un élève...":"ابحث عن تلميذ...";renderAll()}
+function selectNav(btn,target){document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const el=$(target);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});const sb=$("sidebar");sb.classList.add('hiding');setTimeout(()=>{sb.classList.remove('open','hiding')},340);if(window.innerWidth>=801){$("main")?.classList.add('sidebar-collapsed');setTimeout(()=>$("main")?.classList.remove('sidebar-collapsed'),360)}}
+function toggleSidebar(){$("sidebar").classList.toggle("open")}
+function showToast(t){let x=$("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2200)}
+loadData();
+</script>
+</body>
+</html>
